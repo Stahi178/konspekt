@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Конспект лекции — запись голоса в текст и Word</title>
+<meta name="description" content="Онлайн-конспект лекции: голос превращается в текст в реальном времени, готовый файл Word. Работает на iPhone, Android и компьютере.">
+<style>
+:root{--bg:#f5f7fc;--card:#fff;--tx:#161b26;--mut:#667085;--acc:#3b6fe0;--acc2:#6d5ef0;--red:#e5484d;--dark:#b42318;--bd:#e4e8f1;--soft:#eef1f8;--glow:rgba(59,111,224,.15);--ok:#067647;--okbg:#e6f6ee;--bad:#b42318;--badbg:#fdecec;--sh:0 1px 2px rgba(16,24,40,.05),0 12px 32px rgba(16,24,40,.07);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d0f14;--card:#161a22;--tx:#eceff6;--mut:#98a2b3;--bd:#252a35;--soft:#1f2430;--acc:#6b93f0;--acc2:#8b7ff5;--glow:rgba(107,147,240,.16);--ok:#6ce9a6;--okbg:#0f2a1d;--bad:#fda29b;--badbg:#2e1513;--sh:0 1px 2px rgba(0,0,0,.4),0 12px 32px rgba(0,0,0,.35)}}
+:root[data-theme="dark"]{--bg:#0d0f14;--card:#161a22;--tx:#eceff6;--mut:#98a2b3;--bd:#252a35;--soft:#1f2430;--acc:#6b93f0;--acc2:#8b7ff5;--glow:rgba(107,147,240,.16);--ok:#6ce9a6;--okbg:#0f2a1d;--bad:#fda29b;--badbg:#2e1513;--sh:0 1px 2px rgba(0,0,0,.4),0 12px 32px rgba(0,0,0,.35)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;color:var(--tx);background:radial-gradient(900px 420px at 85% -140px,var(--glow),transparent),var(--bg);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:16px 20px 40px}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:6px 0 22px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;letter-spacing:-.01em}
+.nav a{color:var(--mut);text-decoration:none;font-size:14px;margin-right:6px}
+.nav a:hover{color:var(--tx)}
+.ic{width:40px;height:40px;border-radius:12px;border:1px solid var(--bd);background:var(--card);color:var(--tx);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle}
+h1{font-size:clamp(30px,5.4vw,48px);line-height:1.08;letter-spacing:-.03em;margin:6px 0 12px;max-width:720px}
+h1 span{background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{color:var(--mut);font-size:clamp(16px,2.2vw,19px);max-width:620px;margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 26px}
+.chip{padding:6px 12px;border-radius:999px;background:var(--card);border:1px solid var(--bd);font-size:13px;color:var(--mut)}
+.chip.ok{background:var(--okbg);color:var(--ok);border-color:transparent}.chip.bad{background:var(--badbg);color:var(--bad);border-color:transparent}
+.app{display:grid;grid-template-columns:350px 1fr;gap:18px;align-items:start}
+.panel{background:var(--card);border:1px solid var(--bd);border-radius:22px;padding:22px;box-shadow:var(--sh)}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:6px}
+input,select{width:100%;font:inherit;font-size:16px;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:11px 12px;outline:none;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--glow)}
+.mid{text-align:center;margin:20px 0 4px}
+#rec{width:156px;height:156px;border-radius:50%;border:0;cursor:pointer;position:relative;background:linear-gradient(145deg,#f0646a,#d63a40);box-shadow:0 12px 32px rgba(229,72,77,.38),inset 0 1px 0 rgba(255,255,255,.25);transition:transform .15s;-webkit-tap-highlight-color:transparent}
+#rec:hover{transform:scale(1.03)}#rec:active{transform:scale(.97)}
+#rec svg{position:absolute;inset:0;width:100%;height:100%}
+#rec .st{display:none}
+#rec.on{background:linear-gradient(145deg,#c93a2d,#9b1c13);animation:pulse 1.5s infinite}
+#rec.on .mic{display:none}#rec.on .st{display:block}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(229,72,77,.5)}100%{box-shadow:0 0 0 34px rgba(229,72,77,0)}}
+#timer{font-size:34px;font-weight:700;letter-spacing:-.02em;margin-top:14px;font-variant-numeric:tabular-nums}
+#cap{color:var(--mut);font-size:14px;min-height:42px;padding:0 6px}
+#cap.err{color:var(--red)}
+.ph{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.ph h2{margin:0;font-size:22px;letter-spacing:-.02em}.ph span{color:var(--mut);font-size:14px}
+#box{height:440px;overflow-y:auto;padding:16px 18px;background:var(--bg);border:1px solid var(--bd);border-radius:16px}
+#box p{margin:0 0 12px}
+.ts{color:var(--mut);font-size:12px;margin-right:4px}
+.head{font-weight:700;color:var(--acc);font-size:18px;margin-top:8px!important}
+.live,.hint{color:var(--mut);font-style:italic}
+.sec{display:flex;gap:10px;margin-top:14px}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+button.b{font:inherit;font-size:15px;font-weight:500;border:0;border-radius:12px;padding:11px 16px;background:var(--soft);color:var(--tx);cursor:pointer;white-space:nowrap}
+button.b:hover{filter:brightness(.97)}
+button.p{background:linear-gradient(90deg,var(--acc),var(--acc2));color:#fff;font-weight:600}
+.warn{display:none;margin:0 0 14px;padding:10px 12px;border-radius:12px;background:var(--badbg);color:var(--bad);font-size:14px}
+.switch{display:flex;align-items:center;gap:10px;margin:2px 0 0;font-size:14px;cursor:pointer}
+.switch input{width:18px;height:18px;padding:0;accent-color:var(--acc)}
+#meter{height:6px;border-radius:3px;background:var(--soft);margin:12px 28px 2px;overflow:hidden}
+#meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:3px;transition:width .12s}
+#pause{width:100%;margin-top:6px}
+#pause:disabled{opacity:.5;cursor:default}
+h3{font-size:26px;letter-spacing:-.02em;margin:48px 0 16px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.step{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:18px}
+.step b{display:inline-flex;width:30px;height:30px;border-radius:50%;background:var(--glow);color:var(--acc);align-items:center;justify-content:center;font-size:14px;margin-bottom:10px}
+.step h4{margin:0 0 4px;font-size:17px}.step p{margin:0;color:var(--mut);font-size:15px}
+details{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+summary{cursor:pointer;font-weight:600}details p{margin:10px 0 0;color:var(--mut);font-size:15px}
+footer{margin-top:40px;text-align:center;color:var(--mut);font-size:13px}
+@media (max-width:860px){.app{grid-template-columns:1fr}#box{height:320px}.steps{grid-template-columns:1fr}.panel{padding:18px}.nav a{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <div class="logo">
+      <svg width="38" height="38" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b6fe0"/><stop offset="1" stop-color="#6d5ef0"/></linearGradient></defs><rect width="100" height="100" rx="26" fill="url(#g)"/><rect x="41" y="22" width="18" height="34" rx="9" fill="#fff"/><path d="M31 46v4a19 19 0 0 0 38 0v-4M50 69v10M40 79h20" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>
+      Конспект
+    </div>
+    <div><a href="#how">Как это работает</a><a href="#faq">Вопросы</a>
+      <button class="ic" id="theme" aria-label="Сменить тему"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v18" /><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button></div>
+  </nav>
+
+  <h1>Лекция превращается в <span>конспект сама</span></h1>
+  <p class="lead">Включите запись — слова лектора появляются на экране по мере речи. В конце скачайте готовый файл Word. Без регистрации и установки.</p>
+  <div class="chips"><span class="chip">iPhone, Android и компьютер</span><span class="chip">Русский · English · Deutsch · Українська · 中文</span><span class="chip" id="support"></span></div>
+
+  <div class="app" id="app">
+    <div class="panel">
+      <div class="warn" id="warn">Этот браузер не умеет распознавать речь. Откройте страницу в Safari (iPhone) или в Chrome (Android, компьютер).</div>
+      <div class="field"><label for="title">Название лекции</label><input id="title" value="Лекция" autocomplete="off"></div>
+      <div class="field"><label for="lang">Язык лектора</label>
+        <select id="lang"><option value="ru-RU">Русский</option><option value="en-US">English</option><option value="de-DE">Deutsch</option><option value="uk-UA">Українська</option><option value="zh-CN">中文 (китайский)</option></select></div>
+      <label class="switch"><input type="checkbox" id="live" checked> Текст по ходу речи</label>
+      <div class="mid">
+        <button id="rec" aria-label="Начать или остановить запись">
+          <svg class="mic" viewBox="0 0 100 100"><rect x="41" y="24" width="18" height="32" rx="9" fill="#fff"/><path d="M32 47v4a18 18 0 0 0 36 0v-4M50 69v9M41 78h18" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/></svg>
+          <svg class="st" viewBox="0 0 100 100"><rect x="37" y="37" width="26" height="26" rx="6" fill="#fff"/></svg>
+        </button>
+        <div id="timer">00:00:00</div>
+        <div id="meter" aria-hidden="true"><i></i></div>
+        <div id="cap">Нажмите на красную кнопку, чтобы начать запись</div>
+        <button class="b" id="pause" disabled>Пауза</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><h2>Конспект</h2><span id="count"></span></div>
+      <div id="box"></div>
+      <div class="sec"><input id="sec" placeholder="Название нового раздела…" autocomplete="off"><button class="b" id="addsec">+ Раздел</button></div>
+      <div class="btns">
+        <button class="b p" id="dl">Скачать Word</button>
+        <button class="b" id="copy">Копировать текст</button>
+        <button class="b" id="clear">Очистить</button>
+      </div>
+    </div>
+  </div>
+
+  <h3 id="how">Как это работает</h3>
+  <div class="steps">
+    <div class="step"><b>1</b><h4>Нажмите красную кнопку</h4><p>Разрешите доступ к микрофону и положите телефон или ноутбук ближе к лектору.</p></div>
+    <div class="step"><b>2</b><h4>Следите за текстом</h4><p>Серый курсив — черновик фразы. Потом он заменяется точным текстом с отметкой времени.</p></div>
+    <div class="step"><b>3</b><h4>Скачайте Word</h4><p>Добавляйте разделы по ходу лекции, а в конце сохраните конспект как документ .docx.</p></div>
+  </div>
+
+  <h3 id="faq">Частые вопросы</h3>
+  <details><summary>В каких браузерах это работает?</summary><p>В Safari на iPhone и iPad, в Chrome и Edge на Android и компьютере. Firefox распознавание речи не поддерживает.</p></details>
+  <details><summary>Нужен ли интернет?</summary><p>Да. Речь распознаёт сам браузер, обычно на серверах Apple или Google.</p></details>
+  <details><summary>Как выбрать микрофон и поставить запись на паузу?</summary><p>Пауза — кнопка под таймером, также работает клавиша «Пробел» для старта и остановки. Микрофон браузер берёт тот, что выбран в системе по умолчанию: на компьютере поменяйте его в настройках звука, на телефоне подключите гарнитуру.</p></details>
+  <details><summary>Что включить на iPhone?</summary><p>В «Настройки → Основные → Клавиатура» включите «Диктовку» и разрешите странице доступ к микрофону. Если распознавание остановилось, нажмите кнопку ещё раз.</p></details>
+  <details><summary>Не пропадёт ли текст, если страница перезагрузится?</summary><p>Нет. Пока вы работаете, конспект хранится в самом браузере. Готовый файл Word вы скачиваете сами.</p></details>
+  <footer>Конспект лекции · работает прямо в браузере</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const isAndroid=/Android/i.test(navigator.userAgent);
+const KEY="lecture-notes-v1";
+let notes=[],on=false,rec=null,t0=0,interim="",lastTx="",lastAt=0,lock=null,clr=0,paused=false,pauseAt=0,level=0;
+
+try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s){notes=s.notes||[];$("title").value=s.title||"Лекция";$("lang").value=s.lang||"ru-RU";$("live").checked=s.live!==false;}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({notes,title:$("title").value,lang:$("lang").value,live:$("live").checked}));}catch(e){}}
+function say(t,err){const c=$("cap");c.textContent=t;c.className=err?"err":"";}
+const isZh=()=>$("lang").value.startsWith("zh");
+
+function render(){
+  const box=$("box");box.textContent="";
+  if(!notes.length&&!interim){const p=document.createElement("p");p.className="hint";p.textContent="Здесь появится текст лекции. Нажмите красную кнопку и говорите.";box.append(p);}
+  for(const n of notes){
+    const p=document.createElement("p");
+    if(n.h){p.className="head";p.textContent=n.text;}
+    else{const s=document.createElement("span");s.className="ts";s.textContent=n.t+" ";p.append(s,n.text);}
+    box.append(p);
+  }
+  if(interim){const p=document.createElement("p");p.className="live";p.textContent=interim+" …";box.append(p);}
+  box.scrollTop=box.scrollHeight;
+  const all=notes.filter(n=>!n.h).map(n=>n.text).join(" ");
+  $("count").textContent=all?(isZh()?"знаков: "+all.replace(/\s/g,"").length:"слов: "+all.split(/\s+/).length):"";
+}
+function addLine(tx){
+  if(!tx||(tx===lastTx&&Date.now()-lastAt<2500))return;
+  lastTx=tx;lastAt=Date.now();
+  if(!isZh())tx=tx.charAt(0).toUpperCase()+tx.slice(1);
+  notes.push({t:new Date().toLocaleTimeString("ru-RU"),text:tx});save();
+}
+
+function mk(){
+  const r=new SR();
+  r.lang=$("lang").value;r.interimResults=true;r.continuous=!isAndroid;r.maxAlternatives=1;r.onspeechstart=r.onsoundstart=act;
+  r.onresult=e=>{
+    let im="";
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      const res=e.results[i],tx=res[0].transcript.trim();
+      if(res.isFinal)addLine(tx);else im+=tx+" ";
+    }
+    interim=$("live").checked?im.trim():"";render();act();
+  };
+  r.onerror=e=>{
+    if(e.error==="not-allowed"||e.error==="service-not-allowed"){stop();say("Нет доступа к микрофону. Разрешите его в настройках браузера и попробуйте снова.",true);}
+    else if(e.error==="network"){say("Нет интернета: распознавание речи не работает.",true);}
+    else if(e.error==="audio-capture"){stop();say("Микрофон не найден или занят другим приложением.",true);}
+  };
+  r.onend=()=>{
+    interim="";render();
+    if(on&&!paused)setTimeout(()=>{if(!on||paused)return;rec=mk();try{rec.start();}catch(e){}},200);
+  };
+  return r;
+}
+async function keepAwake(){try{if(navigator.wakeLock&&on)lock=await navigator.wakeLock.request("screen");}catch(e){}}
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&on)keepAwake();});
+
+function start(){
+  if(!SR){$("warn").style.display="block";return;}
+  on=true;paused=false;t0=Date.now();$("pause").disabled=false;$("pause").textContent="Пауза";
+  $("rec").classList.add("on");$("title").disabled=$("lang").disabled=true;
+  say("Идёт запись… говорите. Нажмите на кнопку, чтобы остановить");
+  rec=mk();try{rec.start();}catch(e){}
+  keepAwake();
+}
+function stop(){
+  on=false;paused=false;level=0;$("pause").disabled=true;$("pause").textContent="Пауза";
+  $("rec").classList.remove("on");$("title").disabled=$("lang").disabled=false;
+  try{rec&&rec.stop();}catch(e){}
+  try{lock&&lock.release();}catch(e){}lock=null;
+  if(!$("cap").classList.contains("err"))say("Запись остановлена. Можно скачать конспект в Word");
+}
+$("rec").onclick=()=>on?stop():start();
+setInterval(()=>{if(!on||paused)return;const s=Math.floor((Date.now()-t0)/1000),p=n=>String(n).padStart(2,"0");$("timer").textContent=p(s/3600|0)+":"+p(s%3600/60|0)+":"+p(s%60);},500);
+
+function act(){level=1;}
+setInterval(()=>{level=on&&!paused?level*0.82:0;$("meter").firstElementChild.style.width=Math.round(level*100)+"%";},100);
+$("pause").onclick=()=>{
+  if(!on)return;
+  if(!paused){paused=true;pauseAt=Date.now();try{rec&&rec.stop();}catch(e){}interim="";render();$("pause").textContent="Продолжить";$("rec").classList.remove("on");say("Пауза. Нажмите «Продолжить», чтобы записывать дальше");}
+  else{paused=false;t0+=Date.now()-pauseAt;$("pause").textContent="Пауза";$("rec").classList.add("on");say("Идёт запись… говорите. Нажмите на кнопку, чтобы остановить");rec=mk();try{rec.start();}catch(e){}}
+};
+$("sec").onkeydown=e=>{if(e.key==="Enter")$("addsec").click();};
+document.addEventListener("keydown",e=>{if(e.code==="Space"&&!/INPUT|SELECT|TEXTAREA|BUTTON/.test(document.activeElement.tagName)){e.preventDefault();$("rec").click();}});
+$("addsec").onclick=()=>{const v=$("sec").value.trim();if(!v)return;notes.push({h:1,text:v});$("sec").value="";save();render();};
+$("title").oninput=save;$("live").onchange=()=>{save();if(!$("live").checked){interim="";render();}};$("lang").onchange=()=>{save();render();};
+$("clear").onclick=()=>{
+  const b=$("clear");
+  if(clr){clearTimeout(clr);clr=0;b.textContent="Очистить";notes=[];interim="";save();render();return;}
+  b.textContent="Точно очистить?";clr=setTimeout(()=>{clr=0;b.textContent="Очистить";},3000);
+};
+$("copy").onclick=async()=>{
+  const txt=$("title").value+"\n\n"+notes.map(n=>n.h?"\n"+n.text:"["+n.t+"] "+n.text).join("\n");
+  try{await navigator.clipboard.writeText(txt);say("Текст скопирован");}catch(e){say("Не удалось скопировать — выделите текст вручную",true);}
+};
+
+/* ---------- Word (.docx) без библиотек ---------- */
+const crcT=(()=>{const t=[];for(let i=0;i<256;i++){let c=i;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[i]=c>>>0;}return t;})();
+const crc=u=>{let c=-1;for(const b of u)c=crcT[(c^b)&255]^(c>>>8);return(c^-1)>>>0;};
+const u16=v=>[v&255,(v>>8)&255],u32=v=>[v&255,(v>>8)&255,(v>>16)&255,(v>>>24)&255];
+function zip(files){
+  const enc=new TextEncoder(),out=[],cd=[];let off=0;
+  for(const [name,str] of files){
+    const n=enc.encode(name),d=enc.encode(str),c=crc(d),s=d.length;
+    const lh=[...u32(0x04034b50),...u16(20),...u16(0),...u16(0),...u16(0),...u16(0x21),...u32(c),...u32(s),...u32(s),...u16(n.length),...u16(0)];
+    out.push(new Uint8Array(lh),n,d);
+    cd.push(new Uint8Array([...u32(0x02014b50),...u16(20),...u16(20),...u16(0),...u16(0),...u16(0),...u16(0x21),...u32(c),...u32(s),...u32(s),...u16(n.length),...u16(0),...u16(0),...u16(0),...u16(0),...u32(0),...u32(off)]),n);
+    off+=lh.length+n.length+d.length;
+  }
+  const cds=cd.reduce((a,p)=>a+p.length,0);
+  const end=new Uint8Array([...u32(0x06054b50),...u16(0),...u16(0),...u16(files.length),...u16(files.length),...u32(cds),...u32(off),...u16(0)]);
+  return new Blob([...out,...cd,end],{type:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"});
+}
+function buildDocx(){
+  const x=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  const run=(t,rp)=>'<w:r><w:rPr><w:rFonts w:eastAsia="Microsoft YaHei"/>'+rp+'</w:rPr><w:t xml:space="preserve">'+x(t)+'</w:t></w:r>';
+  const para=i=>'<w:p><w:pPr><w:spacing w:after="120"/></w:pPr>'+i+'</w:p>';
+  let b=para(run($("title").value||"Лекция",'<w:b/><w:sz w:val="40"/>'))+para(run("Дата: "+new Date().toLocaleString("ru-RU"),'<w:color w:val="666666"/><w:sz w:val="22"/>'));
+  for(const n of notes)b+=n.h?para(run(n.text,'<w:b/><w:color w:val="3B6FE0"/><w:sz w:val="28"/>')):para(run("["+n.t+"] ",'<w:b/><w:sz w:val="24"/>')+run(n.text,'<w:sz w:val="24"/>'));
+  const H='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+  return zip([
+    ["[Content_Types].xml",H+'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>'],
+    ["_rels/.rels",H+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>'],
+    ["word/document.xml",H+'<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>'+b+'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr></w:body></w:document>']
+  ]);
+}
+$("dl").onclick=async()=>{
+  if(!notes.length){say("Конспект пока пуст",true);return;}
+  const name=(($("title").value||"Лекция").replace(/[\\/:*?"<>|]/g,"")+" "+new Date().toISOString().slice(0,10)+".docx");
+  const blob=buildDocx();
+  try{
+    const dl=window.claude&&claude.use?await claude.use("downloads"):null;
+    if(dl){await dl.save({filename:name,data:blob});say("Файл готов");return;}
+  }catch(e){if(e&&e.code==="declined")return;}
+  try{const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.append(a);a.click();a.remove();say("Файл скачивается…");}
+  catch(e){say("Не удалось скачать. Нажмите «Копировать текст» и вставьте в Word.",true);}
+};
+
+/* тема оформления и поддержка браузера */
+(function(){const r=document.documentElement;
+  try{const t=localStorage.getItem("lecture-theme");if(t)r.dataset.theme=t;}catch(e){}
+  $("theme").onclick=()=>{const dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;const n=dark?"light":"dark";r.dataset.theme=n;try{localStorage.setItem("lecture-theme",n);}catch(e){}};
+  const sp=$("support");sp.textContent=SR?"Распознавание речи: доступно":"Распознавание речи: не поддерживается";sp.classList.add(SR?"ok":"bad");
+})();
+if(!SR)$("warn").style.display="block";
+render();
+</script>
+</body>
+</html>
